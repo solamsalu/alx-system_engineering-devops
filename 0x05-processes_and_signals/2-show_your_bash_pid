@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#This is a Bash script that displays lines containing the bash and it allows you easily the PID of your bash
+
+ps -auxf | grep bash
