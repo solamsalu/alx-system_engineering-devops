@@ -3,7 +3,7 @@
 input = ARGV[0]
 
 # Define a regular expression pattern
-pattern = /hb?tn/i
+pattern = /hb?tn/
 
 # Match the input against the pattern
 if input.match(pattern)
