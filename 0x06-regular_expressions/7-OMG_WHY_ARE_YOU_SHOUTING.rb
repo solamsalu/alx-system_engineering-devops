@@ -3,7 +3,7 @@
 input = ARGV[0]
 
 # Define a regular expression pattern
-pattern = /(?<=from:|to:|flags:).+?(?=\])/i
+pattern = /(?<=from:|to:|flags:).+?(?=\])/
 
 # Match the input against the pattern
 if input.match(pattern)
