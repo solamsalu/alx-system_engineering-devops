@@ -3,7 +3,7 @@
 input = ARGV[0]
 
 # Define a regular expression pattern
-pattern = /hbt{2,5}n/i
+pattern = /hbt{2,5}n/
 
 # Match the input against the pattern
 if input.match(pattern)
