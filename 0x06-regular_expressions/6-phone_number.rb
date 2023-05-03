@@ -3,7 +3,7 @@
 input = ARGV[0]
 
 # Define a regular expression pattern
-pattern = /^\d{10}$/i
+pattern = /^\d{10}$/
 
 # Match the input against the pattern
 if input.match(pattern)
