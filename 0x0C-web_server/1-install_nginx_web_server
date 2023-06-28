@@ -6,7 +6,7 @@ sudo apt-get install -y nginx
 
 # configure Nginx
 ufw allow 'Nginx HTTP'
-sudo sed -i 's/80 default_server/80/' /etc/nginx/sites-available/default
+sudo sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
 sudo service nginx restart
 
 # create index.html file served out by server:
