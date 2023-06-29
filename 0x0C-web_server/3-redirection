@@ -1,24 +1,30 @@
 #!/usr/bin/env bash
-# bash: script install and configure Nginx web server
-# and redirects traffic:
+# Install Nginx web server
+sudo apt update
+sudo apt install nginx
 
-sudo apt-get update -y
-sudo apt-get install -y nginx
+# Create a new server block configuration file for your domain
+sudo nano /etc/nginx/sites-available/solamsalu.tech
 
-# configure Nginx
-sudo sed -i 's/80 default_server/80/' /etc/nginx/sites-available/default
-
-# create index.html file served out by server:
-# & configure the redirection
-echo 'Hello World!' > /etc/nginx/html/index.html
-printf %s "server {
+# Add the redirection configuration
+echo "server {
     listen 80;
-    listen [::]:80 default_server;
-    root   /etc/nginx/html;
-    index  index.html index.htm;
-    location /redirect_me {
-        return 301 https://stackoverflow.com/;
-    }
-}" > /etc/nginx/sites-available/default
+    listen [::]:80;
 
-service nginx restart
+    server_name example.com;
+
+    location /redirect_me {
+        return 301 https://solamsalu.tech/www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    # other server configurations
+}" | sudo tee /etc/nginx/sites-available/solamsalu.tech > /dev/null
+
+# Create a symbolic link to enable the new server block configuration
+sudo ln -s /etc/nginx/sites-available/solamsalu.tech /etc/nginx/sites-enabled/
+
+# Verify the syntax of the Nginx configuration files
+sudo nginx -t
+
+# If the syntax is OK, reload Nginx to apply the changes
+sudo systemctl reload nginx
