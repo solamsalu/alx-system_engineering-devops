@@ -1,12 +1,26 @@
-# Installs and configure an Nginx server using Puppet instead of Bash
-# Nginx should be listening on port 80
-# When querying Nginx at its root / with a GET request (requesting a page)
-# using curl, it must return a page that contains the string Hello World!
-# The redirection must be 301 Moved 
-# Your answer file should be a Puppet manifest containing commands to
-# automatically configure an Ubuntu machine to respect above requirements
+# install nginx, listen on port 80
+# GET with curl return "Hello World"
+# redirection must a 301 Moved permanently
 
-exec {'install':
-  provider => shell,
-  command  => 'sudo apt-get -y update ; sudo apt-get -y install nginx ; echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html ; sudo sed -i "s/server_name _;/server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/luischaparroc permanent;/" /etc/nginx/sites-available/default ; sudo service nginx start',
-}Permanentlya 
+package { 'nginx':
+  ensure => installed,
+  name   => 'nginx',
+}
+
+file { '/var/www/html/index.html':
+  content => 'Hello World',
+  path    => '/var/www/html/index.html'
+}
+
+file_line { 'title':
+  ensure   => present,
+  path     => '/etc/nginx/sites-available/default',
+  after    => 'server_name _;',
+  line     => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
+  multiple => true
+}
+
+service { 'nginx':
+  ensure  => running,
+  require => Package['nginx'],
+}
