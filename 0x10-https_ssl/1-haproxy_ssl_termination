@@ -32,3 +32,17 @@ defaults
         errorfile 502 /etc/haproxy/errors/502.http
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
+
+frontend www-https
+  bind *:443 ssl crt /etc/letsencrypt/live/www.solamsalu.tech/fullchain.pem
+  mode http
+  option http-server-close
+  http-request set-header X-Forwarded-Proto https
+  reqadd X-Forwarded-Port:\ 443
+  default_backend www-backend
+
+backend www-backend
+  mode http
+  balance roundrobin
+  server 39529-web-01 52.91.150.219:80 check
+  server 39529-web-02 54.196.50.77:80 check
