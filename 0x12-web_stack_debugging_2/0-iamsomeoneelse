@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 #run a command as an especific user
 
-sudo -u "$1" whoami
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 <username>"
+  exit 1
+fi
+
+user=$1
+
+sudo -u $user whoami
