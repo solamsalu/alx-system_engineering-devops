@@ -1,0 +1,35 @@
+#!/usr/bin/python3
+""""0. Write  a script using  REST API, for a given employee ID, returns information about his/her TODO list progress."""
+
+import requests
+import sys
+
+# Set the API endpoint URLs
+USERS_API_URL = "https://jsonplaceholder.typicode.com/users/{}"
+TODOS_API_URL = "https://jsonplaceholder.typicode.com/users/{}/todos"
+
+# Get the employee ID from the command line argument
+employee_id = sys.argv[1]
+
+# Send a GET request to the API and retrieve the JSON response
+response = requests.get(USERS_API_URL.format(employee_id))
+employee = response.json()
+
+# Get the employee name from the JSON response
+employee_name = employee["name"]
+
+# Send a GET request to the API and retrieve the JSON response
+response = requests.get(TODOS_API_URL.format(employee_id))
+todos = response.json()
+
+# Count the number of completed and total tasks
+total_tasks = len(todos)
+completed_tasks = sum(todo["completed"] for todo in todos)
+
+# Print the progress report header
+print("Employee {} is done with tasks({}/{}):".format(employee_name, completed_tasks, total_tasks))
+
+# Print the titles of completed tasks
+for todo in todos:
+    if todo["completed"]:
+        print("\t {} {}".format("\t", todo["title"]))
