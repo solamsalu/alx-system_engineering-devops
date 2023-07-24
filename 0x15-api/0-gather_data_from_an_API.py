@@ -1,9 +1,10 @@
 #!/usr/bin/python3
-"""0. Write  a script using  REST API, for a given employee ID, 
-returns information about his/her TODO list progress."""
+"""0. Write  a script using  REST API, for a given employee ID, returns information about his/her TODO list progress.
+"""
 
 import requests
 from sys import argv
+
 
 def get_user(id):
     """get the user
@@ -17,6 +18,7 @@ def get_user(id):
     todos = requests.get(url + 'todos', params={'userId': id}).json()
     return([name, todos])
 
+
 def show(data):
     name = data[0]
     todos = data[1]
@@ -28,6 +30,7 @@ def show(data):
             str_to_print += '\t ' + task['title'] + '\n'
     print('Employee {} is done with tasks({}/{}):'.format(name, n, len(todos)))
     print(str_to_print, end='')
+
 
 if __name__ == '__main__':
     data = get_user(argv[1])
