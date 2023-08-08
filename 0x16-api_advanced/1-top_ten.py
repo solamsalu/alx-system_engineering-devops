@@ -8,15 +8,16 @@ import requests
 
 
 def top_ten(subreddit):
-    """Queries the Reddit API and returns the top 10 hot posts
-    of the subreddit"""
-    
-    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json?limit=10"
-                            .format(subreddit),
-                            headers={"User-Agent": "Custom User Agent"},
-                            allow_redirects=False)
-    if sub_info.status_code != 200:
-        print('None')
-    else:
-        [print(child.get("data").get("title"))
-         for child in sub_info.json().get("data").get("children")]
+    """Prints the titles of the first 10 hot posts listed for a subreddit"""
+    headers = {"user-agent": "Custom User Agent"}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    subdata = requests.get(url, headers=headers)
+    if subdata.status_code != 200:
+        print("None")
+        return
+    data = json.loads(subdata.text).get('data').get('children')
+    if not data:
+        print("None")
+        return
+    for item in data[0:10]:
+        print(item.get('data').get('title'))
