@@ -9,7 +9,7 @@ import requests
 
 def count_words(subreddit, word_list, hot_list=[], after=None):
     """Return a list of the titles of all hot posts listed for a subreddit"""
-    headers = {"user-agent": "holberton"}
+    headers = {"user-agent": "Custom User Agent"}
     params = {"after": after}
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     subdata = requests.get(url, headers=headers, params=params)
