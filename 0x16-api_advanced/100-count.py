@@ -3,58 +3,47 @@
 Module for task 100
 """
 
-import json
 import requests
 
 
-def count_words(subreddit, word_list, hot_list=[], after=None):
-    """Return a list of the titles of all hot posts listed for a subreddit"""
-    headers = {"user-agent": "Custom User Agent"}
-    params = {"after": after}
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    subdata = requests.get(url, headers=headers, params=params)
-    if subdata.status_code != 200:
-        return None
-    data = json.loads(subdata.text).get('data').get('children')
-    after = json.loads(subdata.text).get('data').get('after')
-    if data is None:
-        if len(hot_list) == 0:
-            print("")
-            return
-        word_count = {}
-        word_list = list(set([word.lower() for word in word_list]))
-        for word in word_list:
-            word_count[word] = 0
-        for word in word_list:
-            for title in hot_list:
-                for t in title.split():
-                    if word == t.lower():
-                        word_count[word] = word_count[word] + 1
-        sort_word_count = sorted(word_count.items(), key=lambda x: x[1],
-                                 reverse=True)
-        for i in sort_word_count:
-            if i[1] > 0:
-                print("{}: {}".format(i[0], i[1]))
-    else:
-        for item in data:
-            hot_list.append(item.get('data').get('title'))
-    if after is None:
-        if len(hot_list) == 0:
-            print("")
-            return
-        word_count = {}
-        word_list = list(set([word.lower() for word in word_list]))
-        for word in word_list:
-            word_count[word] = 0
-        for word in word_list:
-            for title in hot_list:
-                for t in title.split():
-                    if word.lower() == t.lower():
-                        word_count[word] = word_count[word] + 1
-        sort_word_count = sorted(word_count.items(), key=lambda x: x[1],
-                                 reverse=True)
-        for i in sort_word_count:
-            if i[1] > 0:
-                print("{}: {}".format(i[0], i[1]))
-    else:
-        return count_words(subreddit, word_list, hot_list, after)
+def count_words(subreddit, word_list, count_dict=None):
+    if count_dict is None:
+        count_dict = {}
+
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {"User-Agent": "Custom User Agent"}
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            posts = data["data"]["children"]
+
+            for post in posts:
+                title = post["data"]["title"]
+                process_title(title, word_list, count_dict)
+
+            next_page = data["data"]["after"]
+
+            if next_page is not None:
+                count_words(subreddit, word_list, count_dict)
+            else:
+                print_results(count_dict)
+        except KeyError:
+            pass
+
+
+def process_title(title, word_list, count_dict):
+    words = title.lower().split()
+
+    for word in words:
+        if word.isalpha() and word in word_list:
+            count_dict[word] = count_dict.get(word, 0) + 1
+
+
+def print_results(count_dict):
+    sorted_counts = sorted(count_dict.items(), key=lambda x: (-x[1], x[0]))
+
+    for word, count in sorted_counts:
+        print(f"{word}: {count}")
