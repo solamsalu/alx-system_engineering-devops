@@ -64,4 +64,4 @@ We apologize for any inconvenience caused by this outage and appreciate your pat
 If you have any further questions or concerns, please don't hesitate to reach out to our support team.
 
 Sincerely,  
-[Your Company Name]
+Sol Support Team
